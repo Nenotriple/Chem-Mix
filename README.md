@@ -1,8 +1,6 @@
-# Chem-Mix
-
-A chemical dilution calculator for mixing ratios and coverage calculations.
-
-[cover]()
+<h1 align="center"> Chem-Mix</h1>
+<p align="center">A chemical dilution calculator for mixing ratios and coverage calculations.</p>
+<p align="center"><img src="https://github.com/user-attachments/assets/9460f32f-19f0-4a5e-8e5a-fc5ee835a271" alt="cover"></p>
 
 
 ## 📋 Index
