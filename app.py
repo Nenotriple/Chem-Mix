@@ -1,14 +1,25 @@
+#endregion
+#region - Imports
+
+
 import tkinter as tk
-from functools import wraps
 
 import widgets
 from presets import PRESETS
 from conversions import CONVERSIONS
 
 
+#endregion
+#region - Constants
+
+
 WINDOW_TITLE = "Chemical Dilution Calculator"
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 315
+
+
+#endregion
+#region - App
 
 
 class ChemMixCalc(tk.Tk):
@@ -17,23 +28,20 @@ class ChemMixCalc(tk.Tk):
         self.root = self
         self.title(WINDOW_TITLE)
         self.resizable(False, False)
-        self.center_window()
         self.initialize_variables()
+        self.center_window()
         self.create_widgets()
         self.bind_events()
+        self.set_preset_formula()
         self.calculate()
 
 
-    def center_window(self):
-        screen_width = self.root.winfo_screenwidth()
-        screen_height = self.root.winfo_screenheight()
-        x = (screen_width - WINDOW_WIDTH) // 2
-        y = (screen_height - WINDOW_HEIGHT) // 2
-        self.root.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}+{x}+{y}')
+#endregion
+#region - Setup
 
 
     def initialize_variables(self):
-        self.calc_mode = tk.StringVar(value="volume")
+        self.calc_mode = tk.StringVar(value="liquid")
         self.input_label_var = tk.StringVar(value="Liquid Volume")
         self.input_var = tk.DoubleVar(value=1)
         self.input_unit = tk.StringVar(value="Gallon")
@@ -47,9 +55,16 @@ class ChemMixCalc(tk.Tk):
         self.formula_input2 = tk.DoubleVar()
         self.formula_input2_unit = tk.StringVar()
         self.coverage_rate = tk.DoubleVar()
-        self.preset_var = tk.StringVar(value=next(iter(PRESETS)))
+        self.preset_var = tk.StringVar(value=list(PRESETS.keys())[1])
         self.mixing_ratio = None
-        self.debounce_timer = None
+
+
+    def center_window(self):
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        x = (screen_width - WINDOW_WIDTH) // 2
+        y = (screen_height - WINDOW_HEIGHT) // 2
+        self.root.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}+{x}+{y}')
 
 
     def create_widgets(self):
@@ -69,18 +84,22 @@ class ChemMixCalc(tk.Tk):
             self.formula_input2_unit,
             self.calc_mode,
             self.coverage_rate,
-            self.preset_var,
         ]
         for variable in trace_list:
             variable.trace_add("write", self.calculate)
+        self.preset_var.trace_add("write", self.set_preset_formula)
+
+
+#endregion
+#region - Helpers
 
 
     def update_labels(self, *args):
-        if self.calc_mode.get() == "volume":
+        if self.calc_mode.get() == "liquid":
             self.input_label_var.set("Liquid Volume")
         else:
             self.input_label_var.set("Chemical Volume")
-        self.result_label_var.set("Chemical Volume" if self.calc_mode.get() == "volume" else "Liquid Volume")
+        self.result_label_var.set("Chemical Volume" if self.calc_mode.get() == "liquid" else "Liquid Volume")
 
 
     def convert_to_ml(self, value, from_unit):
@@ -103,7 +122,7 @@ class ChemMixCalc(tk.Tk):
             pass
 
 
-    def on_preset_change(self, *args):
+    def set_preset_formula(self, *args):
         preset = PRESETS.get(self.preset_var.get())
         if preset:
             self.formula_input1.set(preset["formula_input1"])
@@ -114,42 +133,39 @@ class ChemMixCalc(tk.Tk):
             self.coverage_rate.set(preset["coverage_rate"])
 
 
-    def debounce(self, delay=100):
-        def decorator(func):
-            @wraps(func)
-            def debounced(*args, **kwargs):
-                if self.debounce_timer is not None:
-                    self.after_cancel(self.debounce_timer)
-                self.debounce_timer = self.after(delay, lambda: func(*args, **kwargs))
-            return debounced
-        return decorator
+#endregion
+#region - Calculation
 
 
-    @property
-    def calculate(self):
-        @self.debounce(delay=250)
-        def _calculate(*args):
-            self.on_preset_change()
-            self.set_base_ratio()
-            try:
-                input_value = self.input_var.get()
-                input_in_ml = self.convert_to_ml(input_value, self.input_unit.get())
-                if self.calc_mode.get() == "volume":
-                    result_ml = input_in_ml * self.mixing_ratio
-                    input_in_gallons = self.convert_from_ml(input_in_ml, "Gallon")
-                    coverage_area = input_in_gallons * self.coverage_rate.get()
-                else:
-                    result_ml = input_in_ml / self.mixing_ratio
-                    result_in_gallons = self.convert_from_ml(result_ml, "Gallon")
-                    coverage_area = result_in_gallons * self.coverage_rate.get()
-                result = self.convert_from_ml(result_ml, self.output_unit.get())
-                self.output_var.set(f"{result:.3f}")
-                self.coverage_output_var.set(f"{coverage_area:.1f}")
-                self.update_labels()
-            except (tk.TclError, ValueError, TypeError):
-                self.output_var.set("Invalid input")
-                self.coverage_output_var.set("Invalid input")
-        return _calculate
+    def calculate(self, *args):
+        self.set_base_ratio()
+        try:
+            input_in_ml = self.convert_to_ml(self.input_var.get(), self.input_unit.get())
+            result_ml, coverage_area = self.calculate_volume(input_in_ml)
+            self.update_results(result_ml, coverage_area)
+        except (tk.TclError, ValueError, TypeError):
+            self.output_var.set("Invalid input")
+            self.coverage_output_var.set("Invalid input")
+
+
+    def calculate_volume(self, input_in_ml):
+        mode = self.calc_mode.get()
+        if mode == "liquid":
+            result_ml = input_in_ml * self.mixing_ratio
+            input_in_gallons = self.convert_from_ml(input_in_ml, "Gallon")
+            coverage_area = input_in_gallons * self.coverage_rate.get()
+        elif mode == "chemical":
+            result_ml = input_in_ml / self.mixing_ratio
+            result_in_gallons = self.convert_from_ml(result_ml, "Gallon")
+            coverage_area = result_in_gallons * self.coverage_rate.get()
+        return result_ml, coverage_area
+
+
+    def update_results(self, result_ml, coverage_area):
+        result = self.convert_from_ml(result_ml, self.output_unit.get())
+        self.output_var.set(f"{result:.3f}")
+        self.coverage_output_var.set(f"{coverage_area:.1f}")
+        self.update_labels()
 
 
 if __name__ == '__main__':
