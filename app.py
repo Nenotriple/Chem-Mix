@@ -1,9 +1,9 @@
 import tkinter as tk
 from functools import wraps
 
+import widgets
 from presets import PRESETS
 from conversions import CONVERSIONS
-import widgets
 
 
 WINDOW_TITLE = "Chemical Dilution Calculator"
