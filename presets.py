@@ -15,6 +15,7 @@
 
 
 PRESETS = {
+    "Custom": "",
     "Spectracide: Triazicide": {
         "formula_input1":       2,
         "formula_input1_unit":  "Tablespoon",
