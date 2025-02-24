@@ -171,7 +171,6 @@ class ChemMixCalc(tk.Tk):
         try:
             input_value = self.input_var.get()
             input_in_ml = self.convert_to_ml(input_value, self.input_unit.get())
-
             if self.calc_mode.get() == "volume":
                 result_ml = input_in_ml * self.mixing_ratio
                 input_in_gallons = self.convert_from_ml(input_in_ml, "Gallon")
@@ -180,12 +179,10 @@ class ChemMixCalc(tk.Tk):
                 result_ml = input_in_ml / self.mixing_ratio
                 result_in_gallons = self.convert_from_ml(result_ml, "Gallon")
                 coverage_area = result_in_gallons * self.coverage_rate.get()
-
             result = self.convert_from_ml(result_ml, self.output_unit.get())
             self.output_var.set(f"{result:.3f}")
             self.coverage_output_var.set(f"{coverage_area:.1f}")
             self.result_label_var.set("Chemical Volume" if self.calc_mode.get() == "volume" else "Liquid Volume")
-
         except (tk.TclError, ValueError, TypeError):
             self.output_var.set("Invalid input")
             self.coverage_output_var.set("Invalid input")
