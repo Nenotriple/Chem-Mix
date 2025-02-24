@@ -16,6 +16,7 @@ class ChemMixCalc(tk.Tk):
         self.root = self
         self.title(WINDOW_TITLE)
         self.resizable(False, False)
+
         # Variables
         self.calc_mode = tk.StringVar(value="volume")
         self.input_label_var = tk.StringVar(value="Liquid Volume")
@@ -56,10 +57,19 @@ class ChemMixCalc(tk.Tk):
         # Main frame
         main_frame = ttk.Frame(self, padding="5")
         main_frame.pack(expand=True, fill='both')
-        # Top row frame
+        self._create_top_row_frame(main_frame)
+        self._create_result_frame(main_frame)
+        self._create_formula_frame(main_frame)
+
+
+    def _create_top_row_frame(self, main_frame):
         top_row_frame = ttk.Frame(main_frame)
         top_row_frame.pack(fill='x', pady=5)
-        # Mode frame
+        self._create_mode_frame(top_row_frame)
+        self._create_input_frame(top_row_frame)
+
+
+    def _create_mode_frame(self, top_row_frame):
         mode_frame = ttk.LabelFrame(top_row_frame, text="Calculation Mode", padding="5")
         mode_frame.pack(side='left', fill='both', expand=True, padx=(0, 5))
         # Mode selection
@@ -67,7 +77,9 @@ class ChemMixCalc(tk.Tk):
         mode_radio_frame.pack(expand=True)
         ttk.Radiobutton(mode_radio_frame, text="Chemical from Volume", variable=self.calc_mode, value="volume", command=self.update_labels).pack(anchor='center', padx=5, pady=2)
         ttk.Radiobutton(mode_radio_frame, text="Volume from Chemical", variable=self.calc_mode, value="Chemical", command=self.update_labels).pack(anchor='center', padx=5, pady=2)
-        # Input frame
+
+
+    def _create_input_frame(self, top_row_frame):
         input_frame = ttk.LabelFrame(top_row_frame, text="Input", padding="5")
         input_frame.pack(side='left', fill='both', expand=True, padx=(5, 0))
         # Input row
@@ -79,7 +91,9 @@ class ChemMixCalc(tk.Tk):
         unit_frame = ttk.Frame(input_frame)
         unit_frame.pack(fill='x', pady=(5, 0))
         ttk.Combobox(unit_frame, textvariable=self.input_unit, values=list(CONVERSIONS.keys()), state='readonly', width=12).pack(side='right')
-        # Result frame
+
+
+    def _create_result_frame(self, main_frame):
         result_frame = ttk.LabelFrame(main_frame, text="Result", padding="5")
         result_frame.pack(fill='x', pady=5)
         # Result row
@@ -94,7 +108,9 @@ class ChemMixCalc(tk.Tk):
         ttk.Label(coverage_row, text="Coverage", width=17, anchor="center").pack(side='left', padx=(0,5))
         ttk.Entry(coverage_row, textvariable=self.coverage_output_var, state='readonly').pack(side='left', fill='x', expand=True)
         ttk.Label(coverage_row, text="sq ft", width=15, anchor="center").pack(side='left', padx=(5,0))
-        # Formula frame
+
+
+    def _create_formula_frame(self, main_frame):
         formula_frame = ttk.LabelFrame(main_frame, text="Formula", padding="5")
         formula_frame.pack(fill='x', pady=5)
         # Preset row
