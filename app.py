@@ -94,6 +94,13 @@ class ChemMixCalc(tk.Tk):
 #region - Helpers
 
 
+    def update_results(self, result_ml, coverage_area):
+        result = self.convert_from_ml(result_ml, self.output_unit.get())
+        self.output_var.set(f"{result:.3f}")
+        self.coverage_output_var.set(f"{coverage_area:.1f}")
+        self.update_labels()
+
+
     def update_labels(self, *args):
         if self.calc_mode.get() == "liquid":
             self.input_label_var.set("Liquid Volume")
@@ -161,11 +168,8 @@ class ChemMixCalc(tk.Tk):
         return result_ml, coverage_area
 
 
-    def update_results(self, result_ml, coverage_area):
-        result = self.convert_from_ml(result_ml, self.output_unit.get())
-        self.output_var.set(f"{result:.3f}")
-        self.coverage_output_var.set(f"{coverage_area:.1f}")
-        self.update_labels()
+#endregion
+#region - Framework
 
 
 if __name__ == '__main__':
