@@ -1,9 +1,10 @@
 #endregion
 #region - Imports
 
-
+# Standard
 import tkinter as tk
 
+# Local
 import widgets
 from presets import PRESETS
 from conversions import CONVERSIONS
@@ -13,7 +14,7 @@ from conversions import CONVERSIONS
 #region - Constants
 
 
-WINDOW_TITLE = "Chemical Dilution Calculator"
+WINDOW_TITLE = "Chem-Mix - Chemical Dilution Calculator"
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 315
 
@@ -26,10 +27,11 @@ class ChemMixCalc(tk.Tk):
     def __init__(self):
         super().__init__()
         self.root = self
-        self.title(WINDOW_TITLE)
-        self.resizable(False, False)
+
+
+    def run(self):
+        self.setup_window()
         self.initialize_variables()
-        self.center_window()
         self.create_widgets()
         self.bind_events()
         self.set_preset_formula()
@@ -38,6 +40,16 @@ class ChemMixCalc(tk.Tk):
 
 #endregion
 #region - Setup
+
+
+    def setup_window(self):
+        self.title(WINDOW_TITLE)
+        self.resizable(False, False)
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        x = (screen_width - WINDOW_WIDTH) // 2
+        y = (screen_height - WINDOW_HEIGHT) // 2
+        self.root.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}+{x}+{y}')
 
 
     def initialize_variables(self):
@@ -57,14 +69,6 @@ class ChemMixCalc(tk.Tk):
         self.coverage_rate = tk.DoubleVar()
         self.preset_var = tk.StringVar(value=list(PRESETS.keys())[1])
         self.mixing_ratio = None
-
-
-    def center_window(self):
-        screen_width = self.root.winfo_screenwidth()
-        screen_height = self.root.winfo_screenheight()
-        x = (screen_width - WINDOW_WIDTH) // 2
-        y = (screen_height - WINDOW_HEIGHT) // 2
-        self.root.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}+{x}+{y}')
 
 
     def create_widgets(self):
@@ -174,4 +178,5 @@ class ChemMixCalc(tk.Tk):
 
 if __name__ == '__main__':
     app = ChemMixCalc()
+    app.run()
     app.mainloop()
