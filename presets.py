@@ -1,5 +1,6 @@
-# Description: This file contains the presets for the application.
-# The presets are used to populate the dropdown menu in the application.
+# This file contains the formula presets for the application.
+# The presets include the formula inputs, operators, and coverage rates for each chemical product.
+# The presets are used to populate the formula input fields in the application and calculate the chemical dilution/mix ratio based on the selected preset.
 
 
 """
