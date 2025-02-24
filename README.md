@@ -52,4 +52,5 @@
 - All calculations update in real-time
 - Units can be changed at any time
 - Add custom presets in `Chem-Mix\presets.py`
+- *Spend hours building an app to save minute(s) calculating mix ratios you'll only need a couple times a year. In 25 years, you'll have saved a whole hour!*
 
