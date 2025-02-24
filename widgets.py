@@ -1,7 +1,17 @@
+#endregion
+#region - Imports
+
+
+# Standard
 from tkinter import ttk
 
+# Local
 from presets import PRESETS
 from conversions import CONVERSIONS
+
+
+#endregion
+#region - All
 
 
 def create_all_widgets(parent):
@@ -11,6 +21,10 @@ def create_all_widgets(parent):
         create_input_frame(top_frame, parent.input_label_var, parent.input_var, parent.input_unit)
         create_result_frame(parent, parent.result_label_var, parent.output_var, parent.output_unit, parent.coverage_output_var)
         create_formula_frame(parent, parent.preset_var, parent.formula_input1, parent.formula_input1_unit, parent.formula_operator, parent.formula_input2, parent.formula_input2_unit, parent.coverage_rate)
+
+
+#endregion
+#region - Mode
 
 
 def create_mode_frame(parent, calc_mode, update_labels):
@@ -23,6 +37,10 @@ def create_mode_frame(parent, calc_mode, update_labels):
     # Radio Button
     ttk.Radiobutton(mode_radio_frame, text="Get: Chemical from liquid", variable=calc_mode, value="liquid", command=update_labels).pack(anchor='center', padx=5, pady=2)
     ttk.Radiobutton(mode_radio_frame, text="Get: Liquid from chemical", variable=calc_mode, value="chemical", command=update_labels).pack(anchor='center', padx=5, pady=2)
+
+
+#endregion
+#region - Input
 
 
 def create_input_frame(parent, input_label_var, input_var, input_unit):
@@ -41,6 +59,10 @@ def create_input_frame(parent, input_label_var, input_var, input_unit):
     unit_frame.pack(fill='x', pady=(5, 0))
     # Combobox
     ttk.Combobox(unit_frame, textvariable=input_unit, values=list(CONVERSIONS.keys()), state='readonly', width=12).pack(side='right')
+
+
+#endregion
+#region - Result
 
 
 def create_result_frame(parent, result_label_var, output_var, output_unit, coverage_output_var):
@@ -65,6 +87,10 @@ def create_result_frame(parent, result_label_var, output_var, output_unit, cover
     ttk.Entry(coverage_row, textvariable=coverage_output_var, state='readonly').pack(side='left', fill='x', expand=True)
     # Label
     ttk.Label(coverage_row, text="sq ft", width=15, anchor="center").pack(side='left', padx=(5,0))
+
+
+#endregion
+#region - Formula
 
 
 def create_formula_frame(parent, preset_var, formula_input1, formula_input1_unit, formula_operator, formula_input2, formula_input2_unit, coverage_rate):
