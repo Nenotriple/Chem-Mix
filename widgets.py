@@ -21,8 +21,8 @@ def create_mode_frame(parent, calc_mode, update_labels):
     mode_radio_frame = ttk.Frame(mode_frame)
     mode_radio_frame.pack(expand=True)
     # Radio Button
-    ttk.Radiobutton(mode_radio_frame, text="Chemical from Volume", variable=calc_mode, value="volume", command=update_labels).pack(anchor='center', padx=5, pady=2)
-    ttk.Radiobutton(mode_radio_frame, text="Volume from Chemical", variable=calc_mode, value="Chemical", command=update_labels).pack(anchor='center', padx=5, pady=2)
+    ttk.Radiobutton(mode_radio_frame, text="Get: Chemical from liquid", variable=calc_mode, value="liquid", command=update_labels).pack(anchor='center', padx=5, pady=2)
+    ttk.Radiobutton(mode_radio_frame, text="Get: Liquid from chemical", variable=calc_mode, value="chemical", command=update_labels).pack(anchor='center', padx=5, pady=2)
 
 
 def create_input_frame(parent, input_label_var, input_var, input_unit):
