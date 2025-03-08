@@ -1,9 +1,15 @@
-# This file contains the formula presets for the application.
-# The presets include the formula inputs, operators, and coverage rates for each chemical product.
-# The presets are used to populate the formula input fields in the application and calculate the chemical dilution/mix ratio based on the selected preset.
-
-
 """
+------------
+Description:
+------------
+This file contains the formula presets for the application.
+The presets include the formula inputs, operators, and coverage rates for each chemical product.
+The presets are used to populate the formula input fields in the application and calculate the chemical dilution/mix ratio based on the selected preset.
+
+
+--------------
+Preset Format:
+--------------
 "NAME": {
     formula_input1 = Value of the first input
     formula_input1_unit = Unit of Measure
@@ -12,11 +18,26 @@
     formula_input2_unit = Unit of Measure
     coverage_rate = (sq ft. per gallon)
 },
+
+
+-----------------
+Units of Measure:
+-----------------
+Milliliter
+Teaspoon
+Tablespoon
+Ounce
+Cup
+Pint
+Quart
+Liter
+Gallon
 """
 
 
 PRESETS = {
     "Custom": "",
+
     "Spectracide: Triazicide": {
         "formula_input1":       2,
         "formula_input1_unit":  "Tablespoon",
@@ -25,6 +46,7 @@ PRESETS = {
         "formula_input2_unit":  "Gallon",
         "coverage_rate":        120
     },
+
     "Spectracide: Weed Stop": {
         "formula_input1":       5,
         "formula_input1_unit":  "Ounce",
@@ -33,6 +55,7 @@ PRESETS = {
         "formula_input2_unit":  "Gallon",
         "coverage_rate":        500
     },
+
     "Spectracide: Immunox - Lawn": {
         "formula_input1":       7,
         "formula_input1_unit":  "Ounce",
@@ -41,6 +64,7 @@ PRESETS = {
         "formula_input2_unit":  "Gallon",
         "coverage_rate":        500
     },
+
     "Spectracide: Immunox - Garden": {
         "formula_input1":       1,
         "formula_input1_unit":  "Ounce",
@@ -49,6 +73,7 @@ PRESETS = {
         "formula_input2_unit":  "Gallon",
         "coverage_rate":        120
     },
+
     "Roundup: Weed & Grass": {
         "formula_input1":       6,
         "formula_input1_unit":  "Ounce",
@@ -57,4 +82,23 @@ PRESETS = {
         "formula_input2_unit":  "Gallon",
         "coverage_rate":        300
     },
+
+    "Miracle-Grow - Liquid Plant Food - Garden": {
+        "formula_input1":       1.2,
+        "formula_input1_unit":  "Ounce",
+        "formula_operator":     "/",
+        "formula_input2":       2,
+        "formula_input2_unit":  "Gallon",
+        "coverage_rate":        20
+    },
+
+    "Miracle-Grow - Liquid Plant Food - Houseplant": {
+        "formula_input1":       5,
+        "formula_input1_unit":  "Milliliter",
+        "formula_operator":     "/",
+        "formula_input2":       1,
+        "formula_input2_unit":  "Gallon",
+        "coverage_rate":        10,
+    },
+
 }
