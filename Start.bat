@@ -9,7 +9,7 @@ REM Variables
 set "PYTHON_SCRIPT=app.py"
 set "VENV_DIR=venv"
 set "SCRIPT_DIR=%~dp0"
-set "FAST_START=FALSE"
+set "FAST_START=TRUE"
 
 
 REM Navigate to the script directory
