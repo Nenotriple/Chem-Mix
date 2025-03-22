@@ -83,7 +83,7 @@ PRESETS = {
         "coverage_rate":        300
     },
 
-    "Miracle-Grow - Liquid Plant Food - Garden": {
+    "Miracle-Grow: Liquid Plant Food - Garden": {
         "formula_input1":       1.2,
         "formula_input1_unit":  "Ounce",
         "formula_operator":     "/",
@@ -92,7 +92,7 @@ PRESETS = {
         "coverage_rate":        20
     },
 
-    "Miracle-Grow - Liquid Plant Food - Houseplant": {
+    "Miracle-Grow: Liquid Plant Food - Houseplant": {
         "formula_input1":       5,
         "formula_input1_unit":  "Milliliter",
         "formula_operator":     "/",
@@ -101,4 +101,57 @@ PRESETS = {
         "coverage_rate":        10,
     },
 
+    "Bleach: 10,000 ppm (1min Sanitize)": {
+        "formula_input1":       18,
+        "formula_input1_unit":  "Ounce",
+        "formula_operator":     "/",
+        "formula_input2":       1,
+        "formula_input2_unit":  "Gallon",
+        "coverage_rate":        200,
+    },
+
+    "Bleach: 5,000 ppm (1min Sanitize)": {
+        "formula_input1":       14,
+        "formula_input1_unit":  "Ounce",
+        "formula_operator":     "/",
+        "formula_input2":       1,
+        "formula_input2_unit":  "Gallon",
+        "coverage_rate":        160,
+    },
+
+    "Bleach: 2400 ppm (1min Sanitize)": {
+        "formula_input1":       6,
+        "formula_input1_unit":  "Ounce",
+        "formula_operator":     "/",
+        "formula_input2":       1,
+        "formula_input2_unit":  "Gallon",
+        "coverage_rate":        140,
+    },
+
+    "Bleach: 800 ppm (1-2min Sanitize)": {
+        "formula_input1":       2,
+        "formula_input1_unit":  "Ounce",
+        "formula_operator":     "/",
+        "formula_input2":       1,
+        "formula_input2_unit":  "Gallon",
+        "coverage_rate":        130,
+    },
+
+    "Bleach: 200 ppm (2min Sanitize)": {
+        "formula_input1":       0.5,
+        "formula_input1_unit":  "Ounce",
+        "formula_operator":     "/",
+        "formula_input2":       1,
+        "formula_input2_unit":  "Gallon",
+        "coverage_rate":        120,
+    },
+
+    "Bleach: 5 ppm (Drinkable)": {
+        "formula_input1":       1,
+        "formula_input1_unit":  "Teaspoon",
+        "formula_operator":     "/",
+        "formula_input2":       10,
+        "formula_input2_unit":  "Gallon",
+        "coverage_rate":        100,
+    },
 }
