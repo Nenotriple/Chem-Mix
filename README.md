@@ -5,27 +5,19 @@
 
 ## 📋 Index
 - [Features](#features)
-- [Installation](#installation)
 - [Usage](#usage)
 - [Tips](#tips)
+- [Installation](#installation)
 
 
 ## ✨ Features
-- Calculate chemical-to-liquid or liquid-to-chemical ratios
-- Built-in conversion support for common measurements
+- Calculate chemical-to-liquid or liquid-to-chemical amounts
+- Adjust the unit of measure for any input/output
+- Easy to add your own preset formulas `presets.py`
+- Description of the selected preset (via `?` button)
 - Coverage area calculation
-- Preset mixing formulas
-- Real-time calculations
 - User-friendly interface
-
-
-## 🚀 Installation
-1. Ensure [Python](https://www.python.org/downloads/) is installed on your system
-2. Clone the repository:
-   ```bash
-   git clone https://github.com/Nenotriple/Chem-Mix.git
-   ```
-3. Run `Start.bat` to set up the environment and launch the application
+- Results are updated instantly as you adjust the values
 
 
 ## 💡 Usage
@@ -47,10 +39,15 @@
 
 
 ## 💭 Tips
-- Use presets for common mixing ratios
 - Coverage rate is in square feet per gallon
-- All calculations update in real-time
-- Units can be changed at any time
 - Add custom presets in `Chem-Mix\presets.py`
-- *Spend hours building an app to save minute(s) calculating mix ratios you'll only need a couple times a year. In 25 years, you'll have saved a whole hour!*
+- Add additional units or measure in `Chem-Mix\conversions.py`
 
+
+## 🚀 Installation
+1. Ensure [Python](https://www.python.org/downloads/) is installed on your system
+2. Clone the repository:
+   ```bash
+   git clone https://github.com/Nenotriple/Chem-Mix.git
+   ```
+3. Run `Start.bat` to set up the environment and launch the application
