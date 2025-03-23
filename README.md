@@ -40,8 +40,8 @@
 
 ## 💭 Tips
 - Coverage rate is in square feet per gallon
-- Add custom presets in `Chem-Mix\presets.py`
-- Add additional units or measure in `Chem-Mix\conversions.py`
+- Add custom presets in `presets.py`
+- Add additional units of measure in `conversions.py`
 
 
 ## 🚀 Installation
