@@ -10,24 +10,30 @@ from presets import PRESETS
 from conversions import CONVERSIONS
 
 
+# Type checking
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from app import ChemMixCalc
+
+
 #endregion
 #region - All
 
 
-def create_all_widgets(parent):
-        top_frame = ttk.Frame(parent)
-        top_frame.pack(fill='x', pady=5)
-        create_mode_frame(top_frame, parent.calc_mode, parent.update_labels)
-        create_input_frame(top_frame, parent.input_label_var, parent.input_var, parent.input_unit)
-        create_result_frame(parent, parent.result_label_var, parent.output_var, parent.output_unit, parent.coverage_output_var)
-        create_formula_frame(parent, parent.preset_var, parent.formula_input1, parent.formula_input1_unit, parent.formula_operator, parent.formula_input2, parent.formula_input2_unit, parent.coverage_rate)
+def create_all_widgets(parent: 'ChemMixCalc'):
+    top_frame = ttk.Frame(parent)
+    top_frame.pack(fill='x', pady=5)
+    create_mode_frame(top_frame, parent.calc_mode, parent.update_labels)
+    create_input_frame(top_frame, parent.input_label_var, parent.input_var, parent.input_unit)
+    create_result_frame(parent, parent.result_label_var, parent.output_var, parent.output_unit, parent.coverage_output_var)
+    create_formula_frame(parent, parent.preset_var, parent.formula_input1, parent.formula_input1_unit, parent.formula_operator, parent.formula_input2, parent.formula_input2_unit, parent.coverage_rate)
 
 
 #endregion
 #region - Mode
 
 
-def create_mode_frame(parent, calc_mode, update_labels):
+def create_mode_frame(parent: 'ChemMixCalc', calc_mode, update_labels):
     # Frame
     mode_frame = ttk.LabelFrame(parent, text="Calculation Mode", padding="5")
     mode_frame.pack(side='left', fill='both', expand=True, padx=(0, 5))
@@ -43,7 +49,7 @@ def create_mode_frame(parent, calc_mode, update_labels):
 #region - Input
 
 
-def create_input_frame(parent, input_label_var, input_var, input_unit):
+def create_input_frame(parent: 'ChemMixCalc', input_label_var, input_var, input_unit):
     # Frame
     input_frame = ttk.LabelFrame(parent, text="Input", padding="5")
     input_frame.pack(side='left', fill='both', expand=True, padx=(5, 0))
@@ -65,7 +71,7 @@ def create_input_frame(parent, input_label_var, input_var, input_unit):
 #region - Result
 
 
-def create_result_frame(parent, result_label_var, output_var, output_unit, coverage_output_var):
+def create_result_frame(parent: 'ChemMixCalc', result_label_var, output_var, output_unit, coverage_output_var):
     # Frame
     result_frame = ttk.LabelFrame(parent, text="Result", padding="5")
     result_frame.pack(fill='x', pady=5)
@@ -73,27 +79,27 @@ def create_result_frame(parent, result_label_var, output_var, output_unit, cover
     result_row = ttk.Frame(result_frame)
     result_row.pack(fill='x')
     # Label
-    ttk.Label(result_row, textvariable=result_label_var, width=17, anchor="center").pack(side='left', padx=(0,5))
+    ttk.Label(result_row, textvariable=result_label_var, width=17, anchor="center").pack(side='left', padx=(0, 5))
     # Entry
     ttk.Entry(result_row, textvariable=output_var, state='readonly').pack(side='left', fill='x', expand=True)
     # Combobox
-    ttk.Combobox(result_row, textvariable=output_unit, values=list(CONVERSIONS.keys()), state='readonly', width=12).pack(side='left', padx=(5,0))
+    ttk.Combobox(result_row, textvariable=output_unit, values=list(CONVERSIONS.keys()), state='readonly', width=12).pack(side='left', padx=(5, 0))
     # Frame
     coverage_row = ttk.Frame(result_frame)
-    coverage_row.pack(fill='x', pady=(10,0))
+    coverage_row.pack(fill='x', pady=(10, 0))
     # Label
-    ttk.Label(coverage_row, text="Coverage", width=17, anchor="center").pack(side='left', padx=(0,5))
+    ttk.Label(coverage_row, text="Coverage", width=17, anchor="center").pack(side='left', padx=(0, 5))
     # Entry
     ttk.Entry(coverage_row, textvariable=coverage_output_var, state='readonly').pack(side='left', fill='x', expand=True)
     # Label
-    ttk.Label(coverage_row, text="sq ft", width=15, anchor="center").pack(side='left', padx=(5,0))
+    ttk.Label(coverage_row, text="sq ft", width=15, anchor="center").pack(side='left', padx=(5, 0))
 
 
 #endregion
 #region - Formula
 
 
-def create_formula_frame(parent, preset_var, formula_input1, formula_input1_unit, formula_operator, formula_input2, formula_input2_unit, coverage_rate):
+def create_formula_frame(parent: 'ChemMixCalc', preset_var, formula_input1, formula_input1_unit, formula_operator, formula_input2, formula_input2_unit, coverage_rate):
     # Frame
     formula_frame = ttk.LabelFrame(parent, text="Formula", padding="5")
     formula_frame.pack(fill='x', pady=5)
@@ -101,15 +107,16 @@ def create_formula_frame(parent, preset_var, formula_input1, formula_input1_unit
     preset_row = ttk.Frame(formula_frame)
     preset_row.pack(fill='x')
     # Label
-    ttk.Label(preset_row, text="Preset", width=17, anchor="center").pack(side='left', padx=(0,5))
+    ttk.Label(preset_row, text="Preset", width=17, anchor="center").pack(side='left', padx=(0, 5))
     # Combobox
-    preset_combo = ttk.Combobox(preset_row, textvariable=preset_var, values=list(PRESETS.keys()), width=20, state='readonly')
-    preset_combo.pack(side='left', fill='x', expand=True)
+    ttk.Combobox(preset_row, textvariable=preset_var, values=list(PRESETS.keys()), width=20, state='readonly').pack(side='left', fill='x', expand=True)
+    # Help button
+    ttk.Button(preset_row, text="?", width=2, command=parent.show_preset_info).pack(side='left', padx=(5, 0))
     # Frame
     formula_row = ttk.Frame(formula_frame)
-    formula_row.pack(fill='x', pady=(10,0))
+    formula_row.pack(fill='x', pady=(10, 0))
     # Label
-    ttk.Label(formula_row, text="Ratio", width=17, anchor="center").pack(side='left', padx=(0,5))
+    ttk.Label(formula_row, text="Ratio", width=17, anchor="center").pack(side='left', padx=(0, 5))
     # Entry
     ttk.Entry(formula_row, textvariable=formula_input1, width=4).pack(side='left', fill='x', expand=True)
     # Combobox
@@ -121,10 +128,10 @@ def create_formula_frame(parent, preset_var, formula_input1, formula_input1_unit
     ttk.Combobox(formula_row, textvariable=formula_input2_unit, values=list(CONVERSIONS.keys()), width=12, state='readonly').pack(side='left', padx=2)
     # Frame
     coverage_input_row = ttk.Frame(formula_frame)
-    coverage_input_row.pack(fill='x', pady=(10,0))
+    coverage_input_row.pack(fill='x', pady=(10, 0))
     # Label
-    ttk.Label(coverage_input_row, text="Coverage Rate", width=17, anchor="center").pack(side='left', padx=(0,5))
+    ttk.Label(coverage_input_row, text="Coverage Rate", width=17, anchor="center").pack(side='left', padx=(0, 5))
     # Entry
     ttk.Entry(coverage_input_row, textvariable=coverage_rate).pack(side='left', fill='x', expand=True)
     # Label
-    ttk.Label(coverage_input_row, text="sq ft/gallon", width=15, anchor="center").pack(side='left', padx=(5,0))
+    ttk.Label(coverage_input_row, text="sq ft/gallon", width=15, anchor="center").pack(side='left', padx=(5, 0))
