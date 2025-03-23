@@ -1,8 +1,10 @@
 #endregion
 #region - Imports
 
+
 # Standard
 import tkinter as tk
+from tkinter import messagebox
 
 # Local
 import widgets
@@ -136,12 +138,19 @@ class ChemMixCalc(tk.Tk):
     def set_preset_formula(self, *args):
         preset = PRESETS.get(self.preset_var.get())
         if preset:
-            self.formula_input1.set(preset["formula_input1"])
-            self.formula_input1_unit.set(preset["formula_input1_unit"])
-            self.formula_operator.set(preset["formula_operator"])
-            self.formula_input2.set(preset["formula_input2"])
-            self.formula_input2_unit.set(preset["formula_input2_unit"])
+            self.formula_input1.set(preset["input1"])
+            self.formula_input1_unit.set(preset["input1_unit"])
+            self.formula_operator.set(preset["operator"])
+            self.formula_input2.set(preset["input2"])
+            self.formula_input2_unit.set(preset["input2_unit"])
             self.coverage_rate.set(preset["coverage_rate"])
+
+
+    def show_preset_info(self):
+        preset = PRESETS.get(self.preset_var.get())
+        if preset:
+            info = preset.get("info", "No information available.")
+            messagebox.showinfo("Information", info)
 
 
 #endregion
