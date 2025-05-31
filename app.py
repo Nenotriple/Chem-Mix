@@ -15,7 +15,7 @@ from conversions import CONVERSIONS
 #region - Constants
 
 
-WINDOW_TITLE = "Chem-Mix - Chemical Dilution Calculator"
+WINDOW_TITLE = "Chem-Mix"
 WINDOW_WIDTH = 500
 WINDOW_HEIGHT = 315
 
@@ -54,12 +54,13 @@ class ChemMixCalc(tk.Tk):
 
 
     def initialize_variables(self):
-        self.calc_mode = tk.StringVar(value="liquid")
-        self.input_label_var = tk.StringVar(value="Liquid Volume")
+        self.primary_mode = tk.StringVar(value="volume")  # "volume" or "ratio"
+        self.calc_mode = tk.StringVar(value="partB")
+        self.input_label_var = tk.StringVar(value="Part B Volume")
         self.input_var = tk.DoubleVar(value=1)
         self.input_unit = tk.StringVar(value="Gallon")
         self.output_unit = tk.StringVar(value="Ounce")
-        self.result_label_var = tk.StringVar(value="Chemical Volume")
+        self.result_label_var = tk.StringVar(value="Part A Volume")
         self.output_var = tk.StringVar()
         self.coverage_output_var = tk.StringVar()
         self.formula_input1 = tk.DoubleVar()
@@ -69,6 +70,7 @@ class ChemMixCalc(tk.Tk):
         self.formula_input2_unit = tk.StringVar()
         self.coverage_rate = tk.DoubleVar()
         self.preset_var = tk.StringVar(value=list(PRESETS.keys())[1])
+        self.ratio_input = tk.StringVar(value="50:1")
         self.mixing_ratio = None
 
 
@@ -89,10 +91,13 @@ class ChemMixCalc(tk.Tk):
             self.formula_input2_unit,
             self.calc_mode,
             self.coverage_rate,
+            self.primary_mode,
+            self.ratio_input,
         ]
         for variable in trace_list:
             variable.trace_add("write", self.calculate)
         self.preset_var.trace_add("write", self.set_preset_formula)
+        self.primary_mode.trace_add("write", self.update_widget_states)
 
 
 #endregion
@@ -102,16 +107,51 @@ class ChemMixCalc(tk.Tk):
     def update_results(self, result_ml, coverage_area):
         result = self.convert_from_ml(result_ml, self.output_unit.get())
         self.output_var.set(f"{result:.3f}")
-        self.coverage_output_var.set(f"{coverage_area:.1f}")
+        if self.primary_mode.get() == "ratio":
+            self.coverage_output_var.set("")
+        else:
+            self.coverage_output_var.set(f"{coverage_area:.1f}")
         self.update_labels()
 
 
     def update_labels(self, *args):
-        if self.calc_mode.get() == "liquid":
-            self.input_label_var.set("Liquid Volume")
+        if self.calc_mode.get() == "partB":
+            self.input_label_var.set("Part B Volume")
         else:
-            self.input_label_var.set("Chemical Volume")
-        self.result_label_var.set("Chemical Volume" if self.calc_mode.get() == "liquid" else "Liquid Volume")
+            self.input_label_var.set("Part A Volume")
+        self.result_label_var.set("Part A Volume" if self.calc_mode.get() == "partB" else "Part B Volume")
+
+    def update_widget_states(self, *args):
+        """Enable/disable ratio widgets based on primary mode"""
+        if hasattr(self, 'ratio_entry') and hasattr(self, 'ratio_label'):
+            if self.primary_mode.get() == "ratio":
+                self.ratio_entry.config(state='normal')
+                self.ratio_label.config(state='normal')
+                if hasattr(self, 'formula_widgets'):
+                    for widget in self.formula_widgets:
+                        widget.config(state='disabled')
+                if hasattr(self, 'formula_label'):
+                    self.formula_label.config(state='disabled')
+                if hasattr(self, 'preset_combo'):
+                    self.preset_combo.config(state='disabled')
+                if hasattr(self, 'preset_label'):
+                    self.preset_label.config(state='disabled')
+                if hasattr(self, 'preset_help_button'):
+                    self.preset_help_button.config(state='disabled')
+            else:
+                self.ratio_entry.config(state='disabled')
+                self.ratio_label.config(state='disabled')
+                if hasattr(self, 'formula_widgets'):
+                    for widget in self.formula_widgets:
+                        widget.config(state='normal')
+                if hasattr(self, 'formula_label'):
+                    self.formula_label.config(state='normal')
+                if hasattr(self, 'preset_combo'):
+                    self.preset_combo.config(state='readonly')
+                if hasattr(self, 'preset_label'):
+                    self.preset_label.config(state='normal')
+                if hasattr(self, 'preset_help_button'):
+                    self.preset_help_button.config(state='normal')
 
 
     def convert_to_ml(self, value, from_unit):
@@ -124,12 +164,21 @@ class ChemMixCalc(tk.Tk):
 
     def set_base_ratio(self):
         try:
-            val1_ml = self.convert_to_ml(self.formula_input1.get(), self.formula_input1_unit.get())
-            val2_ml = self.convert_to_ml(self.formula_input2.get(), self.formula_input2_unit.get())
-            if self.formula_operator.get() == "/":
-                self.mixing_ratio = val1_ml / val2_ml
+            if self.primary_mode.get() == "ratio":
+                ratio_parts = self.ratio_input.get().split(':')
+                if len(ratio_parts) == 2:
+                    partB_ratio = float(ratio_parts[0])
+                    partA_ratio = float(ratio_parts[1])
+                    self.mixing_ratio = partA_ratio / partB_ratio
+                else:
+                    self.mixing_ratio = None
             else:
-                self.mixing_ratio = val1_ml * val2_ml
+                val1_ml = self.convert_to_ml(self.formula_input1.get(), self.formula_input1_unit.get())
+                val2_ml = self.convert_to_ml(self.formula_input2.get(), self.formula_input2_unit.get())
+                if self.formula_operator.get() == "/":
+                    self.mixing_ratio = val1_ml / val2_ml
+                else:
+                    self.mixing_ratio = val1_ml * val2_ml
         except:
             pass
 
@@ -169,14 +218,20 @@ class ChemMixCalc(tk.Tk):
 
     def calculate_volume(self, input_in_ml):
         mode = self.calc_mode.get()
-        if mode == "liquid":
+        if mode == "partB":
             result_ml = input_in_ml * self.mixing_ratio
-            input_in_gallons = self.convert_from_ml(input_in_ml, "Gallon")
-            coverage_area = input_in_gallons * self.coverage_rate.get()
-        elif mode == "chemical":
+            if self.primary_mode.get() == "volume":
+                input_in_gallons = self.convert_from_ml(input_in_ml, "Gallon")
+                coverage_area = input_in_gallons * self.coverage_rate.get()
+            else:
+                coverage_area = 0
+        elif mode == "partA":
             result_ml = input_in_ml / self.mixing_ratio
-            result_in_gallons = self.convert_from_ml(result_ml, "Gallon")
-            coverage_area = result_in_gallons * self.coverage_rate.get()
+            if self.primary_mode.get() == "volume":
+                result_in_gallons = self.convert_from_ml(result_ml, "Gallon")
+                coverage_area = result_in_gallons * self.coverage_rate.get()
+            else:
+                coverage_area = 0
         return result_ml, coverage_area
 
 
