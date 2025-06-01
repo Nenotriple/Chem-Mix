@@ -5,7 +5,7 @@
 from tkinter import ttk
 
 # Local
-from presets import PRESETS
+from preset_manager import get_preset_names
 from conversions import CONVERSIONS
 
 
@@ -126,7 +126,7 @@ def create_formula_frame(parent: 'Main', preset_var, formula_input1, formula_inp
     parent.preset_label = ttk.Label(preset_row, text="Preset", width=17, anchor="center")
     parent.preset_label.pack(side='left', padx=(0, 5))
     # Combobox
-    parent.preset_combo = ttk.Combobox(preset_row, textvariable=preset_var, values=list(PRESETS.keys()), width=20, state='readonly')
+    parent.preset_combo = ttk.Combobox(preset_row, textvariable=preset_var, values=get_preset_names(), width=20, state='readonly')
     parent.preset_combo.pack(side='left', fill='x', expand=True)
     # Help button
     parent.preset_help_button = ttk.Button(preset_row, text="?", width=2, command=parent.show_preset_info)

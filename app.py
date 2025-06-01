@@ -8,7 +8,7 @@ from typing import Optional, List
 
 # Local
 import widgets
-from presets import PRESETS
+from preset_manager import load_presets, save_preset, get_preset_names
 from conversions import CONVERSIONS
 
 
@@ -18,7 +18,7 @@ from conversions import CONVERSIONS
 
 WINDOW_TITLE = "Chem-Mix"
 WINDOW_WIDTH = 500
-WINDOW_HEIGHT = 315
+WINDOW_HEIGHT = 345
 
 
 #endregion
@@ -71,7 +71,8 @@ class Main(tk.Tk):
         self.formula_input2 = tk.DoubleVar()
         self.formula_input2_unit = tk.StringVar()
         self.coverage_rate = tk.DoubleVar()
-        self.preset_var = tk.StringVar(value=list(PRESETS.keys())[1])
+        self.preset_names = get_preset_names()
+        self.preset_var = tk.StringVar(value=self.preset_names[1] if len(self.preset_names) > 1 else "")
         self.ratio_input = tk.StringVar(value="50:1")
         self.mixing_ratio = None
 
@@ -195,7 +196,8 @@ class Main(tk.Tk):
 
 
     def set_preset_formula(self, *args):
-        preset = PRESETS.get(self.preset_var.get())
+        presets = load_presets()
+        preset = presets.get(self.preset_var.get())
         if preset:
             self.formula_input1.set(preset["input1"])
             self.formula_input1_unit.set(preset["input1_unit"])
@@ -206,7 +208,8 @@ class Main(tk.Tk):
 
 
     def show_preset_info(self):
-        preset = PRESETS.get(self.preset_var.get())
+        presets = load_presets()
+        preset = presets.get(self.preset_var.get())
         if preset:
             info = preset.get("info", "No information available.")
             messagebox.showinfo("Information", info)
