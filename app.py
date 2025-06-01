@@ -3,7 +3,8 @@
 
 # Standard
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
+from typing import Optional, List
 
 # Local
 import widgets
@@ -24,7 +25,7 @@ WINDOW_HEIGHT = 315
 #region - App
 
 
-class ChemMixCalc(tk.Tk):
+class Main(tk.Tk):
     def __init__(self):
         super().__init__()
         self.root = self
@@ -54,6 +55,7 @@ class ChemMixCalc(tk.Tk):
 
 
     def initialize_variables(self):
+        # App variables
         self.primary_mode = tk.StringVar(value="volume")  # "volume" or "ratio"
         self.calc_mode = tk.StringVar(value="partB")
         self.input_label_var = tk.StringVar(value="Part B Volume")
@@ -72,6 +74,15 @@ class ChemMixCalc(tk.Tk):
         self.preset_var = tk.StringVar(value=list(PRESETS.keys())[1])
         self.ratio_input = tk.StringVar(value="50:1")
         self.mixing_ratio = None
+
+        # Widget references
+        self.preset_label: Optional[ttk.Label] = None
+        self.preset_combo: Optional[ttk.Combobox] = None
+        self.preset_help_button: Optional[ttk.Button] = None
+        self.ratio_label: Optional[ttk.Label] = None
+        self.ratio_entry: Optional[ttk.Entry] = None
+        self.formula_label: Optional[ttk.Label] = None
+        self.formula_widgets: List[ttk.Widget] = []
 
 
     def create_widgets(self):
@@ -240,6 +251,6 @@ class ChemMixCalc(tk.Tk):
 
 
 if __name__ == '__main__':
-    app = ChemMixCalc()
+    app = Main()
     app.run()
     app.mainloop()

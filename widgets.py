@@ -12,14 +12,14 @@ from conversions import CONVERSIONS
 # Type checking
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from app import ChemMixCalc
+    from app import Main
 
 
 #endregion
 #region - All
 
 
-def create_all_widgets(parent: 'ChemMixCalc'):
+def create_all_widgets(parent: 'Main'):
     top_frame = ttk.Frame(parent)
     top_frame.pack(fill='x', pady=5)
     create_primary_mode_frame(top_frame, parent.primary_mode)
@@ -65,7 +65,7 @@ def create_mode_frame(parent, calc_mode, update_labels):
 #region - Input
 
 
-def create_input_frame(parent: 'ChemMixCalc', input_label_var, input_var, input_unit):
+def create_input_frame(parent: 'Main', input_label_var, input_var, input_unit):
     # Frame
     input_frame = ttk.LabelFrame(parent, text="Input", padding="5")
     input_frame.pack(side='left', fill='both', expand=True, padx=(5, 0))
@@ -87,7 +87,7 @@ def create_input_frame(parent: 'ChemMixCalc', input_label_var, input_var, input_
 #region - Result
 
 
-def create_result_frame(parent: 'ChemMixCalc', result_label_var, output_var, output_unit, coverage_output_var):
+def create_result_frame(parent: 'Main', result_label_var, output_var, output_unit, coverage_output_var):
     # Frame
     result_frame = ttk.LabelFrame(parent, text="Result", padding="5")
     result_frame.pack(fill='x', pady=5)
@@ -115,7 +115,7 @@ def create_result_frame(parent: 'ChemMixCalc', result_label_var, output_var, out
 #region - Formula
 
 
-def create_formula_frame(parent: 'ChemMixCalc', preset_var, formula_input1, formula_input1_unit, formula_operator, formula_input2, formula_input2_unit, coverage_rate, ratio_input, primary_mode):
+def create_formula_frame(parent: 'Main', preset_var, formula_input1, formula_input1_unit, formula_operator, formula_input2, formula_input2_unit, coverage_rate, ratio_input, primary_mode):
     # Frame
     formula_frame = ttk.LabelFrame(parent, text="Formula", padding="5")
     formula_frame.pack(fill='x', pady=5)
@@ -162,9 +162,6 @@ def create_formula_frame(parent: 'ChemMixCalc', preset_var, formula_input1, form
     # Combobox
     formula_combo2 = ttk.Combobox(formula_row, textvariable=formula_input2_unit, values=list(CONVERSIONS.keys()), width=12, state='readonly')
     formula_combo2.pack(side='left', padx=2)
-
-    # Store widget references for enabling/disabling
-    parent.formula_widgets = [formula_entry1, formula_combo1, formula_operator_combo, formula_entry2, formula_combo2]
 
     # Frame
     coverage_input_row = ttk.Frame(formula_frame)
