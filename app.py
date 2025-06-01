@@ -18,7 +18,7 @@ from conversions import CONVERSIONS
 
 WINDOW_TITLE = "Chem-Mix"
 WINDOW_WIDTH = 500
-WINDOW_HEIGHT = 345
+WINDOW_HEIGHT = 400
 
 
 #endregion
@@ -87,7 +87,6 @@ class Main(tk.Tk):
 
 
     def create_widgets(self):
-        self.config(padx=5, pady=5)
         widgets.create_all_widgets(self)
 
 
