@@ -8,9 +8,6 @@ import os
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-# Local
-from widgets import PresetDialog
-
 # Type checking
 from typing import TYPE_CHECKING, Dict, Any, List, Optional
 if TYPE_CHECKING:
@@ -187,6 +184,7 @@ def _move_preset_by_offset(app: 'Main', listbox: tk.Listbox, offset: int):
 
 def add_preset(app: 'Main', listbox: tk.Listbox):
     """Add a new preset."""
+    from widgets import PresetDialog
     dialog = PresetDialog(app, "Add Preset")
     app.wait_window(dialog.dialog)
     if dialog.result:
@@ -201,6 +199,7 @@ def add_preset(app: 'Main', listbox: tk.Listbox):
 
 def edit_preset(app: 'Main', listbox: tk.Listbox):
     """Edit selected preset."""
+    from widgets import PresetDialog
     preset_name = _get_selected_preset_name(listbox, "edit")
     if not preset_name:
         return
@@ -228,7 +227,6 @@ def delete_preset_gui(app: 'Main', listbox: tk.Listbox):
     preset_name = _get_selected_preset_name(listbox, "delete")
     if not preset_name:
         return
-
     if messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete '{preset_name}'?"):
         delete_preset(preset_name)
         _refresh_all_preset_displays(app, listbox)
