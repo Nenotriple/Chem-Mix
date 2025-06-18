@@ -18,7 +18,7 @@ from conversions import CONVERSIONS
 
 WINDOW_TITLE = "Chem-Mix"
 WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 400
+WINDOW_HEIGHT = 365
 
 
 #endregion
@@ -51,6 +51,7 @@ class Main(tk.Tk):
         x = (screen_width - WINDOW_WIDTH) // 2
         y = (screen_height - WINDOW_HEIGHT) // 2
         self.root.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}+{x}+{y}')
+        self.root.minsize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
 
     def initialize_variables(self):

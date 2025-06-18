@@ -38,8 +38,8 @@ def create_preset_manager_tab(app, notebook):
     left_frame = ttk.Frame(main_frame)
     left_frame.pack(side='left', fill='both', expand=True, padx=(0, 10))
     # Preset list
-    list_frame = ttk.LabelFrame(left_frame, text="Presets", padding="5")
-    list_frame.pack(fill='both', expand=True, pady=(0, 10))
+    list_frame = ttk.LabelFrame(left_frame, text="Presets")
+    list_frame.pack(fill='both', expand=True)
     # Listbox with scrollbar
     listbox_frame = ttk.Frame(list_frame)
     listbox_frame.pack(fill='both', expand=True)
@@ -57,7 +57,7 @@ def create_preset_manager_tab(app, notebook):
     ttk.Button(control_frame, text="Move Up", command=lambda: preset_manager.move_preset_up(app, preset_listbox)).pack(side='left', padx=(0, 5))
     ttk.Button(control_frame, text="Move Down", command=lambda: preset_manager.move_preset_down(app, preset_listbox)).pack(side='left')
     # Right side - Preset details
-    right_frame = ttk.LabelFrame(main_frame, text="Preset Details", padding="5")
+    right_frame = ttk.LabelFrame(main_frame, text="Preset Details")
     right_frame.pack(side='right', fill='both', expand=True)
     # Store references for updating
     app.preset_listbox = preset_listbox
@@ -69,7 +69,7 @@ def create_preset_manager_tab(app, notebook):
 
 
 def create_calculator_tab(app, notebook):
-    calculator_frame = ttk.Frame(notebook)
+    calculator_frame = ttk.Frame(notebook, padding="5")
     notebook.add(calculator_frame, text="Calculator")
     # Top frame
     top_frame = ttk.Frame(calculator_frame)
@@ -93,8 +93,8 @@ def create_calculator_tab(app, notebook):
 
 def create_mode_sel_frame(frame: 'ttk.Frame', app: 'Main'):
     # Frame
-    m_frame = ttk.LabelFrame(frame, text="Mode", padding="5")
-    m_frame.pack(side='left', fill='both', expand=True, padx=(0, 5))
+    m_frame = ttk.LabelFrame(frame, text="Mode")
+    m_frame.pack(side='left', fill='both', expand=True)
     # Frame
     r_frame = ttk.Frame(m_frame)
     r_frame.pack(expand=True)
@@ -109,8 +109,8 @@ def create_mode_sel_frame(frame: 'ttk.Frame', app: 'Main'):
 
 def create_output_sel_frame(frame: 'ttk.Frame', app: 'Main'):
     # Frame
-    o_frame = ttk.LabelFrame(frame, text="Output", padding="5")
-    o_frame.pack(side='left', fill='both', expand=True, padx=5)
+    o_frame = ttk.LabelFrame(frame, text="Output")
+    o_frame.pack(side='left', fill='both', expand=True)
     # Frame
     r_frame = ttk.Frame(o_frame)
     r_frame.pack(expand=True)
@@ -125,8 +125,8 @@ def create_output_sel_frame(frame: 'ttk.Frame', app: 'Main'):
 
 def create_input_frame(frame: 'ttk.Frame', app: 'Main'):
     # Frame
-    i_frame = ttk.LabelFrame(frame, text="Input", padding="5")
-    i_frame.pack(side='left', fill='both', expand=True, padx=(5, 0))
+    i_frame = ttk.LabelFrame(frame, text="Input")
+    i_frame.pack(side='left', fill='both', expand=True)
     # Frame
     i_row = ttk.Frame(i_frame)
     i_row.pack(fill='x', expand=True)
@@ -147,7 +147,7 @@ def create_input_frame(frame: 'ttk.Frame', app: 'Main'):
 
 def create_result_frame(frame: 'ttk.Frame', app: 'Main'):
     # Frame
-    r_frame = ttk.LabelFrame(frame, text="Result", padding="5")
+    r_frame = ttk.LabelFrame(frame, text="Result")
     r_frame.pack(fill='x')
     # Frame
     r_row = ttk.Frame(r_frame)
@@ -175,7 +175,7 @@ def create_result_frame(frame: 'ttk.Frame', app: 'Main'):
 
 def create_formula_frame(frame: 'ttk.Frame', app: 'Main'):
     # Frame
-    f_frame = ttk.LabelFrame(frame, text="Formula", padding="5")
+    f_frame = ttk.LabelFrame(frame, text="Formula")
     f_frame.pack(fill='x')
     # Frame
     p_row = ttk.Frame(f_frame)
@@ -273,8 +273,8 @@ class PresetDialog:
         ttk.Label(main_frame, text="Preset Name:").pack(anchor='w')
         ttk.Entry(main_frame, textvariable=self.name_var, width=40).pack(fill='x', pady=(0, 10))
         # Formula section
-        formula_frame = ttk.LabelFrame(main_frame, text="Formula", padding="5")
-        formula_frame.pack(fill='x', pady=(0, 10))
+        formula_frame = ttk.LabelFrame(main_frame, text="Formula")
+        formula_frame.pack(fill='x')
         # Input 1
         ttk.Label(formula_frame, text="Input 1:").pack(anchor='w')
         input1_frame = ttk.Frame(formula_frame)
@@ -294,8 +294,8 @@ class PresetDialog:
         ttk.Label(formula_frame, text="Coverage Rate (sq ft/gallon):").pack(anchor='w', pady=(5, 0))
         ttk.Entry(formula_frame, textvariable=self.coverage_var, width=15).pack(anchor='w')
         # Info section
-        info_frame = ttk.LabelFrame(main_frame, text="Information", padding="5")
-        info_frame.pack(fill='both', expand=True, pady=(0, 10))
+        info_frame = ttk.LabelFrame(main_frame, text="Information")
+        info_frame.pack(fill='both', expand=True)
         self.info_text = tk.Text(info_frame, height=8, wrap='word')
         info_scroll = ttk.Scrollbar(info_frame, orient='vertical', command=self.info_text.yview)
         self.info_text.configure(yscrollcommand=info_scroll.set)
