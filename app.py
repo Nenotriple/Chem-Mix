@@ -8,7 +8,7 @@ from typing import Optional, List
 
 # Local
 import widgets
-from preset_manager import load_presets, save_preset, get_preset_names
+import preset_manager
 from conversions import CONVERSIONS
 
 
@@ -70,7 +70,7 @@ class Main(tk.Tk):
         self.formula_input2 = tk.DoubleVar()
         self.formula_input2_unit = tk.StringVar()
         self.coverage_rate = tk.DoubleVar()
-        self.preset_names = get_preset_names()
+        self.preset_names = preset_manager.get_preset_names()
         self.preset_var = tk.StringVar(value=self.preset_names[0] if self.preset_names else "")
         self.ratio_input = tk.StringVar(value="50:1")
         self.mixing_ratio = None

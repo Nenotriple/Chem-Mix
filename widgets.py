@@ -2,13 +2,12 @@
 
 
 # Standard
-from tkinter import ttk, messagebox, simpledialog
+from tkinter import ttk, messagebox
 import tkinter as tk
 
 # Local
-from preset_manager import get_preset_names, get_preset, save_preset, delete_preset, reorder_presets
+import preset_manager
 from conversions import CONVERSIONS
-
 
 # Type checking
 from typing import TYPE_CHECKING
@@ -52,11 +51,11 @@ def create_preset_manager_tab(app, notebook):
     # Control buttons
     control_frame = ttk.Frame(left_frame)
     control_frame.pack(fill='x')
-    ttk.Button(control_frame, text="Add New", command=lambda: add_preset(app, preset_listbox)).pack(side='left', padx=(0, 5))
-    ttk.Button(control_frame, text="Edit", command=lambda: edit_preset(app, preset_listbox)).pack(side='left', padx=(0, 5))
-    ttk.Button(control_frame, text="Delete", command=lambda: delete_preset_gui(app, preset_listbox)).pack(side='left', padx=(0, 5))
-    ttk.Button(control_frame, text="Move Up", command=lambda: move_preset_up(app, preset_listbox)).pack(side='left', padx=(0, 5))
-    ttk.Button(control_frame, text="Move Down", command=lambda: move_preset_down(app, preset_listbox)).pack(side='left')
+    ttk.Button(control_frame, text="Add New", command=lambda: preset_manager.add_preset(app, preset_listbox)).pack(side='left', padx=(0, 5))
+    ttk.Button(control_frame, text="Edit", command=lambda: preset_manager.edit_preset(app, preset_listbox)).pack(side='left', padx=(0, 5))
+    ttk.Button(control_frame, text="Delete", command=lambda: preset_manager.delete_preset_gui(app, preset_listbox)).pack(side='left', padx=(0, 5))
+    ttk.Button(control_frame, text="Move Up", command=lambda: preset_manager.move_preset_up(app, preset_listbox)).pack(side='left', padx=(0, 5))
+    ttk.Button(control_frame, text="Move Down", command=lambda: preset_manager.move_preset_down(app, preset_listbox)).pack(side='left')
     # Right side - Preset details
     right_frame = ttk.LabelFrame(main_frame, text="Preset Details", padding="5")
     right_frame.pack(side='right', fill='both', expand=True)
@@ -64,9 +63,9 @@ def create_preset_manager_tab(app, notebook):
     app.preset_listbox = preset_listbox
     app.preset_details_frame = right_frame
     # Bind selection event
-    preset_listbox.bind('<<ListboxSelect>>', lambda e: show_preset_details(app, preset_listbox, right_frame))
+    preset_listbox.bind('<<ListboxSelect>>', lambda e: preset_manager.show_preset_details(preset_listbox, right_frame))
     # Load initial data
-    refresh_preset_list(preset_listbox)
+    preset_manager.refresh_preset_list(preset_listbox)
 
 
 def create_calculator_tab(app, notebook):
@@ -185,7 +184,7 @@ def create_formula_frame(frame: 'ttk.Frame', app: 'Main'):
     app.preset_label = ttk.Label(p_row, text="Preset", width=17, anchor="center")
     app.preset_label.pack(side='left', padx=(0, 5))
     # Combobox
-    app.preset_combo = ttk.Combobox(p_row, textvariable=app.preset_var, values=get_preset_names(), width=20, state='readonly')
+    app.preset_combo = ttk.Combobox(p_row, textvariable=app.preset_var, values=preset_manager.get_preset_names(), width=20, state='readonly')
     app.preset_combo.pack(side='left', fill='x', expand=True)
     # Help button
     app.preset_help_button = ttk.Button(p_row, text="?", width=2, command=app.show_preset_info)
@@ -238,156 +237,7 @@ def create_formula_frame(frame: 'ttk.Frame', app: 'Main'):
 
 
 #endregion
-#region - Preset Manager Functions
-
-
-def refresh_preset_list(listbox):
-    """Refresh the preset listbox with current presets."""
-    listbox.delete(0, tk.END)
-    for name in get_preset_names():
-        listbox.insert(tk.END, name)
-
-
-def show_preset_details(app, listbox, details_frame):
-    """Show details of selected preset."""
-    selection = listbox.curselection()
-    if not selection:
-        clear_preset_details(details_frame)
-        return
-    preset_name = listbox.get(selection[0])
-    preset = get_preset(preset_name)
-    if not preset:
-        clear_preset_details(details_frame)
-        return
-    # Clear existing widgets
-    for widget in details_frame.winfo_children():
-        widget.destroy()
-    # Display preset details
-    ttk.Label(details_frame, text=f"Name: {preset_name}", font=('TkDefaultFont', 10, 'bold')).pack(anchor='w', pady=(0, 10))
-    # Formula details
-    formula_frame = ttk.LabelFrame(details_frame, text="Formula", padding="5")
-    formula_frame.pack(fill='x', pady=(0, 10))
-    ttk.Label(formula_frame, text=f"Input 1: {preset.get('input1', 'N/A')} {preset.get('input1_unit', '')}").pack(anchor='w')
-    ttk.Label(formula_frame, text=f"Operator: {preset.get('operator', 'N/A')}").pack(anchor='w')
-    ttk.Label(formula_frame, text=f"Input 2: {preset.get('input2', 'N/A')} {preset.get('input2_unit', '')}").pack(anchor='w')
-    ttk.Label(formula_frame, text=f"Coverage Rate: {preset.get('coverage_rate', 'N/A')} sq ft/gallon").pack(anchor='w')
-    # Info section
-    if preset.get('info'):
-        info_frame = ttk.LabelFrame(details_frame, text="Information", padding="5")
-        info_frame.pack(fill='both', expand=True)
-        info_text = tk.Text(info_frame, wrap='word', height=6, state='disabled')
-        info_text.pack(fill='both', expand=True)
-        info_text.config(state='normal')
-        info_text.insert('1.0', preset['info'])
-        info_text.config(state='disabled')
-
-
-def clear_preset_details(details_frame):
-    """Clear the preset details area."""
-    for widget in details_frame.winfo_children():
-        widget.destroy()
-    ttk.Label(details_frame, text="Select a preset to view details").pack(expand=True)
-
-
-def add_preset(app, listbox):
-    """Add a new preset."""
-    dialog = PresetDialog(app, "Add Preset")
-    app.wait_window(dialog.dialog)
-    if dialog.result:
-        name, preset_data = dialog.result
-        save_preset(name, preset_data)
-        refresh_preset_list(listbox)
-        refresh_calculator_presets(app)
-        # Select the new preset
-        preset_names = get_preset_names()
-        if name in preset_names:
-            listbox.selection_set(preset_names.index(name))
-
-
-def edit_preset(app, listbox):
-    """Edit selected preset."""
-    selection = listbox.curselection()
-    if not selection:
-        messagebox.showwarning("No Selection", "Please select a preset to edit.")
-        return
-    preset_name = listbox.get(selection[0])
-    preset = get_preset(preset_name)
-    if not preset:
-        messagebox.showerror("Error", "Preset not found.")
-        return
-    dialog = PresetDialog(app, "Edit Preset", preset_name, preset)
-    app.wait_window(dialog.dialog)
-    if dialog.result:
-        new_name, preset_data = dialog.result
-        # If name changed, delete old and create new
-        if new_name != preset_name:
-            delete_preset(preset_name)
-        save_preset(new_name, preset_data)
-        refresh_preset_list(listbox)
-        refresh_calculator_presets(app)
-        # Select the edited preset
-        preset_names = get_preset_names()
-        if new_name in preset_names:
-            listbox.selection_set(preset_names.index(new_name))
-
-
-def delete_preset_gui(app, listbox):
-    """Delete selected preset."""
-    selection = listbox.curselection()
-    if not selection:
-        messagebox.showwarning("No Selection", "Please select a preset to delete.")
-        return
-    preset_name = listbox.get(selection[0])
-    if messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete '{preset_name}'?"):
-        delete_preset(preset_name)
-        refresh_preset_list(listbox)
-        refresh_calculator_presets(app)
-        clear_preset_details(app.preset_details_frame)
-
-
-def move_preset_up(app, listbox):
-    """Move selected preset up in the list."""
-    selection = listbox.curselection()
-    if not selection or selection[0] == 0:
-        return
-    current_order = get_preset_names()
-    index = selection[0]
-    # Swap positions
-    current_order[index], current_order[index-1] = current_order[index-1], current_order[index]
-    reorder_presets(current_order)
-    refresh_preset_list(listbox)
-    refresh_calculator_presets(app)
-    # Maintain selection
-    listbox.selection_set(index-1)
-
-
-def move_preset_down(app, listbox):
-    """Move selected preset down in the list."""
-    selection = listbox.curselection()
-    current_order = get_preset_names()
-    if not selection or selection[0] >= len(current_order) - 1:
-        return
-    index = selection[0]
-    # Swap positions
-    current_order[index], current_order[index+1] = current_order[index+1], current_order[index]
-    reorder_presets(current_order)
-    refresh_preset_list(listbox)
-    refresh_calculator_presets(app)
-    # Maintain selection
-    listbox.selection_set(index+1)
-
-
-def refresh_calculator_presets(app):
-    """Refresh the preset dropdown in the calculator tab."""
-    if hasattr(app, 'preset_combo'):
-        current_value = app.preset_var.get()
-        new_names = get_preset_names()
-        app.preset_combo['values'] = new_names
-        # If current selection is still valid, keep it
-        if current_value not in new_names and new_names:
-            app.preset_var.set(new_names[0] if new_names else "")
-        elif not new_names:
-            app.preset_var.set("")
+#region - PresetDialog
 
 
 class PresetDialog:
@@ -484,3 +334,6 @@ class PresetDialog:
 
     def cancel(self):
         self.dialog.destroy()
+
+
+#endregion
