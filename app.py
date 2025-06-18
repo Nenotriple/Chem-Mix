@@ -17,7 +17,7 @@ from conversions import CONVERSIONS
 
 
 WINDOW_TITLE = "Chem-Mix"
-WINDOW_WIDTH = 500
+WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 400
 
 
@@ -46,7 +46,6 @@ class Main(tk.Tk):
 
     def setup_window(self):
         self.title(WINDOW_TITLE)
-        self.resizable(False, False)
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         x = (screen_width - WINDOW_WIDTH) // 2
@@ -72,7 +71,7 @@ class Main(tk.Tk):
         self.formula_input2_unit = tk.StringVar()
         self.coverage_rate = tk.DoubleVar()
         self.preset_names = get_preset_names()
-        self.preset_var = tk.StringVar(value=self.preset_names[1] if len(self.preset_names) > 1 else "")
+        self.preset_var = tk.StringVar(value=self.preset_names[0] if self.preset_names else "")
         self.ratio_input = tk.StringVar(value="50:1")
         self.mixing_ratio = None
 
@@ -84,6 +83,8 @@ class Main(tk.Tk):
         self.ratio_entry: Optional[ttk.Entry] = None
         self.formula_label: Optional[ttk.Label] = None
         self.formula_widgets: List[ttk.Widget] = []
+        self.preset_listbox: Optional[tk.Listbox] = None
+        self.preset_details_frame: Optional[ttk.Frame] = None
 
 
     def create_widgets(self):
@@ -131,6 +132,7 @@ class Main(tk.Tk):
         else:
             self.input_label_var.set("Part A Volume")
         self.result_label_var.set("Part A Volume" if self.calc_mode.get() == "partB" else "Part B Volume")
+
 
     def update_widget_states(self, *args):
         """Enable/disable ratio widgets based on primary mode"""
@@ -195,8 +197,8 @@ class Main(tk.Tk):
 
 
     def set_preset_formula(self, *args):
-        presets = load_presets()
-        preset = presets.get(self.preset_var.get())
+        from preset_manager import get_preset
+        preset = get_preset(self.preset_var.get())
         if preset:
             self.formula_input1.set(preset["input1"])
             self.formula_input1_unit.set(preset["input1_unit"])
@@ -207,8 +209,8 @@ class Main(tk.Tk):
 
 
     def show_preset_info(self):
-        presets = load_presets()
-        preset = presets.get(self.preset_var.get())
+        from preset_manager import get_preset
+        preset = get_preset(self.preset_var.get())
         if preset:
             info = preset.get("info", "No information available.")
             messagebox.showinfo("Information", info)
