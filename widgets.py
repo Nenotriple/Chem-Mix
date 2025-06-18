@@ -275,8 +275,8 @@ class PresetDialog:
         # Formula section
         formula_frame = ttk.LabelFrame(main_frame, text="Formula")
         formula_frame.pack(fill='x')
-        # Input 1
-        ttk.Label(formula_frame, text="Input 1:").pack(anchor='w')
+        # Part A
+        ttk.Label(formula_frame, text="Part A:").pack(anchor='w')
         input1_frame = ttk.Frame(formula_frame)
         input1_frame.pack(fill='x', pady=(0, 5))
         ttk.Entry(input1_frame, textvariable=self.input1_var, width=10).pack(side='left')
@@ -284,8 +284,8 @@ class PresetDialog:
         # Operator
         ttk.Label(formula_frame, text="Operator:").pack(anchor='w', pady=(5, 0))
         ttk.Combobox(formula_frame, textvariable=self.operator_var, values=["/", "*"], state='readonly', width=10).pack(anchor='w', pady=(0, 5))
-        # Input 2
-        ttk.Label(formula_frame, text="Input 2:").pack(anchor='w')
+        # Part B
+        ttk.Label(formula_frame, text="Part B:").pack(anchor='w')
         input2_frame = ttk.Frame(formula_frame)
         input2_frame.pack(fill='x', pady=(0, 5))
         ttk.Entry(input2_frame, textvariable=self.input2_var, width=10).pack(side='left')
